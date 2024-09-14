@@ -72,11 +72,11 @@ async def update_charity_project(
     """
 
     charity_project = await check_charity_project_exists(project_id, session)
-    await check_project_closed(charity_project.fully_invested)
+    check_project_closed(charity_project.fully_invested)
     if obj_in.name:
         await check_name_dublicate(obj_in.name, session)
     if obj_in.full_amount:
-        await check_invested_sum(
+        check_invested_sum(
             charity_project.invested_amount, obj_in.full_amount
         )
 
@@ -103,7 +103,7 @@ async def delete_charity_project(
     его можно только закрыть.
     """
     charity_project = await check_charity_project_exists(project_id, session)
-    await check_alredy_invested(charity_project.invested_amount)
+    check_alredy_invested(charity_project.invested_amount)
     charity_project = await charity_project_crud.remove(
         charity_project, session
     )

@@ -18,15 +18,7 @@ class CRUDCharityProject(CRUDBase):
         )
         return db_charity_project_id.scalars().first()
 
-    async def get_charity_project_by_id(
-        self, charity_project_id: str, session: AsyncSession
-    ) -> Optional[CharityProject]:
-        charity_project = await session.execute(
-            select(CharityProject).where(
-                CharityProject.id == charity_project_id
-            )
-        )
-        return charity_project.scalars().first()
+
 
 
 charity_project_crud = CRUDCharityProject(CharityProject)

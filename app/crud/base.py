@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.models import CharityProject
 
 from app.models import User
 
@@ -22,7 +23,7 @@ class CRUDBase:
         return db_objs.scalars().all()
 
     async def create(
-        self, obj_in, session: AsyncSession, user: Optional[User] = None
+        self, obj_in, session: AsyncSession, user: Optional[User] = None, commit: bool = True
     ):
         obj_in_data = obj_in.dict()
         if user:
@@ -30,8 +31,9 @@ class CRUDBase:
 
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
-        await session.commit()
-        await session.refresh(db_obj)
+        if commit:
+            await session.commit()
+            await session.refresh(db_obj)
         return db_obj
 
     async def update(self, db_obj, obj_in, session: AsyncSession):
@@ -51,3 +53,17 @@ class CRUDBase:
         await session.delete(db_obj)
         await session.commit()
         return db_obj
+
+    async def get_charity_project_by_id(
+        self, charity_project_id: str, session: AsyncSession
+    ) -> Optional[CharityProject]:
+        charity_project = await session.execute(
+            select(CharityProject).where(
+                CharityProject.id == charity_project_id
+            )
+        )
+        return charity_project.scalars().first()
+
+    async def get_not_full_invested_projects(self, db_obj, session: AsyncSession):
+        not_full_invested_projects = await session.execute(select(self.model).where(self.model.fully_invested == 0).order_by(self.model.create_date))
+        return not_full_invested_projects.scalars().all()

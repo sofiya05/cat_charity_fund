@@ -7,15 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import CharityProject, Donation
 
 
-async def get_not_full_invested_objects(
-    obj_in: Union[CharityProject, Donation], session: AsyncSession
-) -> List[Union[CharityProject, Donation]]:
-    objects = await session.execute(
-        select(obj_in)
-        .where(obj_in.fully_invested == 0)
-        .order_by(obj_in.create_date)
-    )
-    return objects.scalars().all()
+# async def get_not_full_invested_objects(
+#     obj_in: Union[CharityProject, Donation], session: AsyncSession
+# ) -> List[Union[CharityProject, Donation]]:
+#     objects = await session.execute(
+#         select(obj_in)
+#         .where(obj_in.fully_invested == 0)
+#         .order_by(obj_in.create_date)
+#     )
+#     return objects.scalars().all()
 
 
 async def close_donation_for_obj(obj_in: Union[CharityProject, Donation]):

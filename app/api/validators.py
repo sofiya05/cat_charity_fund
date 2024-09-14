@@ -29,7 +29,7 @@ async def check_charity_project_exists(project_id: int, session: AsyncSession):
     return charity_project
 
 
-async def check_invested_sum(invested_amount: int, new_full_amount: int):
+def check_invested_sum(invested_amount: int, new_full_amount: int):
     if invested_amount > new_full_amount:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
@@ -40,7 +40,7 @@ async def check_invested_sum(invested_amount: int, new_full_amount: int):
         )
 
 
-async def check_project_closed(fully_invested: bool):
+def check_project_closed(fully_invested: bool):
     if fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
@@ -48,7 +48,7 @@ async def check_project_closed(fully_invested: bool):
         )
 
 
-async def check_alredy_invested(invested: bool):
+def check_alredy_invested(invested: bool):
     if invested > 0:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
