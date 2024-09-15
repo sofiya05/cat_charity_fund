@@ -1,14 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Integer, CheckConstraint
+from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, Integer
 
 from app.core.db import Base
 
 
 class BaseCharityDonationModel(Base):
     __abstract__ = True
-
-
 
     full_amount = Column(Integer, nullable=False)
     invested_amount = Column(Integer, default=0)
@@ -18,5 +16,8 @@ class BaseCharityDonationModel(Base):
 
     __table_args__ = (
         CheckConstraint('full_amount > 0', name='check_full_amount_positive'),
-        CheckConstraint('invested_amount <= full_amount', name='check_invested_amount_less_equal_full_amount'),
+        CheckConstraint(
+            'invested_amount <= full_amount',
+            name='check_invested_amount_less_equal_full_amount',
+        ),
     )

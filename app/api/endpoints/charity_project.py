@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,13 +13,14 @@ from app.api.validators import (
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
+from app.crud.donation import donation_crud
 from app.models import Donation
 from app.schemas.charity_project import (
     CharityProjectCreate,
     CharityProjectDB,
     CharityProjectUpdate,
 )
-from app.services.investing import close_donation_for_obj, investing_process
+from app.services.investing import investing_process
 
 router = APIRouter()
 
@@ -49,8 +52,13 @@ async def create_new_charity_project(
 
     Создаёт благотворительный проект."""
     await check_name_dublicate(obj_in.name, session)
-    new_charity_project = await charity_project_crud.create(obj_in, session)
-    await investing_process(new_charity_project, Donation, session)
+    new_charity_project = await charity_project_crud.create(
+        obj_in, session, commit=False
+    )
+    fill_models = await donation_crud.get_not_full_invested_projects(session)
+    invested_list = investing_process(new_charity_project, fill_models)
+    await charity_project_crud.commit(invested_list, session)
+    await session.refresh(new_charity_project)
     return new_charity_project
 
 
@@ -76,15 +84,16 @@ async def update_charity_project(
     if obj_in.name:
         await check_name_dublicate(obj_in.name, session)
     if obj_in.full_amount:
-        check_invested_sum(
-            charity_project.invested_amount, obj_in.full_amount
-        )
+        check_invested_sum(charity_project.invested_amount, obj_in.full_amount)
+
+    if obj_in.full_amount == charity_project.invested_amount:
+        charity_project.fully_invested = True
+        charity_project.close_date = datetime.now()
 
     charity_project = await charity_project_crud.update(
         charity_project, obj_in, session
     )
-    if obj_in.full_amount == charity_project.invested_amount:
-        await close_donation_for_obj(charity_project)
+
     return charity_project
 
 
