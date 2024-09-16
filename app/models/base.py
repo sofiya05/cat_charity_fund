@@ -25,9 +25,3 @@ class BaseCharityDonationModel(Base):
             'invested_amount >= 0', name='check_invested_amount_non_negative'
         ),
     )
-
-    @validates('invested_amount')
-    def validate_invested_amount(self, key, value):
-        if not value:
-            return 0
-        return value
