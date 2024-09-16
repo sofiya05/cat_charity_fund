@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, Integer
+from sqlalchemy.orm import validates
 
 from app.core.db import Base
 
@@ -21,6 +22,12 @@ class BaseCharityDonationModel(Base):
             name='check_invested_amount_less_equal_full_amount',
         ),
         CheckConstraint(
-            'invested_amount > 0', name='check_invested_amount_positive'
+            'invested_amount >= 0', name='check_invested_amount_non_negative'
         ),
     )
+
+    @validates('invested_amount')
+    def validate_invested_amount(self, key, value):
+        if not value:
+            return 0
+        return value

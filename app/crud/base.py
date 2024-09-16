@@ -29,6 +29,7 @@ class CRUDBase:
         commit: bool = True,
     ):
         obj_in_data = obj_in.dict()
+        obj_in_data['invested_amount'] = 0
         if user:
             obj_in_data['user_id'] = user.id
 
