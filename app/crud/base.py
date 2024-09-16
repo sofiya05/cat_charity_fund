@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import CharityProject, User
+from app.models import User
 
 
 class CRUDBase:
@@ -65,15 +65,19 @@ class CRUDBase:
         session.add(obj)
         await session.commit()
 
-    async def get_charity_project_by_id(
-        self, charity_project_id: str, session: AsyncSession
-    ) -> Optional[CharityProject]:
-        charity_project = await session.execute(
-            select(CharityProject).where(
-                CharityProject.id == charity_project_id
-            )
+    async def commit_list(
+        self,
+        obj,
+        session: AsyncSession,
+    ):
+        session.add_all(obj)
+        await session.commit()
+
+    async def get_project_by_id(self, project_id: str, session: AsyncSession):
+        project = await session.execute(
+            select(self.model).where(self.model.id == project_id)
         )
-        return charity_project.scalars().first()
+        return project.scalars().first()
 
     async def get_not_full_invested_projects(self, session: AsyncSession):
         not_full_invested_projects = await session.execute(

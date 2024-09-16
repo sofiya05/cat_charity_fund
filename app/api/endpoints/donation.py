@@ -35,12 +35,15 @@ async def create_new_donation(
     user: User = Depends(current_user),
 ):
     """Сделать пожертвование."""
-    new_donation = await donation_crud.create(obj_in, session, user)
+    new_donation = await donation_crud.create(
+        obj_in, session, user, commit=False
+    )
     fill_models = await charity_project_crud.get_not_full_invested_projects(
         session
     )
-    invested_list = investing_process(new_donation, fill_models)
-    await donation_crud.commit(invested_list, session)
+    target, sources = investing_process(new_donation, fill_models)
+    await donation_crud.commit(target, session)
+    await charity_project_crud.commit_list(sources, session)
     await session.refresh(new_donation)
     return new_donation
 

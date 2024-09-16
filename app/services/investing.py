@@ -8,24 +8,18 @@ def investing_process(
     sources: list[BaseCharityDonationModel],
 ) -> BaseCharityDonationModel:
 
-    # локально все тесты проходили, на платформе практикума
-    # выдает ошибку по нонтайпу
-    if not target.invested_amount:
-        target.invested_amount = 0
-
     for source in sources:
+        transfer_amount = min(
+            target.full_amount - target.invested_amount,
+            source.full_amount - source.invested_amount,
+        )
+        if transfer_amount == 0:
+            break
 
-        free_amount_target = target.full_amount - target.invested_amount
-        free_amount_source = source.full_amount - source.invested_amount
-        transfer_amount = min(free_amount_target, free_amount_source)
-
-        for obj, free_amount in [
-            (target, free_amount_target),
-            (source, free_amount_source),
-        ]:
+        for obj in [target, source]:
             obj.invested_amount += transfer_amount
             if obj.full_amount == obj.invested_amount:
                 obj.fully_invested = True
                 obj.close_date = datetime.now()
 
-    return target
+    return target, sources

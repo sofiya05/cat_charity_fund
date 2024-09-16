@@ -55,8 +55,9 @@ async def create_new_charity_project(
         obj_in, session, commit=False
     )
     fill_models = await donation_crud.get_not_full_invested_projects(session)
-    invested_list = investing_process(new_charity_project, fill_models)
-    await charity_project_crud.commit(invested_list, session)
+    target, sources = investing_process(new_charity_project, fill_models)
+    await charity_project_crud.commit(target, session)
+    await donation_crud.commit_list(sources, session)
     await session.refresh(new_charity_project)
     return new_charity_project
 

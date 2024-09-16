@@ -18,7 +18,7 @@ async def check_name_dublicate(project_name: str, session: AsyncSession):
 
 
 async def check_charity_project_exists(project_id: int, session: AsyncSession):
-    charity_project = await charity_project_crud.get_charity_project_by_id(
+    charity_project = await charity_project_crud.get_project_by_id(
         project_id, session
     )
     if not charity_project:
