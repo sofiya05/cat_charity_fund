@@ -64,12 +64,13 @@ uvicorn main:app --reload
 
 После запуска проекта, документация будет доступна по адресам:
 
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)\
-[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-
-### Вики проекта
-[https://github.com/sofiya05/cat_charity_fund/wiki/Как-установить-проект](https://github.com/sofiya05/cat_charity_fund/wiki/Как-установить-проект)
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) - swagger
+[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) - redoc
 
 ## Автор
 
 Проект разработала **Бурсянина София**. Почта для связи s.bursyanina@yandex.ru
+
+[Ссылка на документацию](https://github.com/sofiya05/cat_charity_fund?tab=readme-ov-file#qrkot)
+
+

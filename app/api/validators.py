@@ -1,9 +1,8 @@
 from http import HTTPStatus
 
+from app.crud.charity_project import charity_project_crud
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.crud.charity_project import charity_project_crud
 
 
 async def check_name_dublicate(project_name: str, session: AsyncSession):
@@ -18,9 +17,7 @@ async def check_name_dublicate(project_name: str, session: AsyncSession):
 
 
 async def check_charity_project_exists(project_id: int, session: AsyncSession):
-    charity_project = await charity_project_crud.get_project_by_id(
-        project_id, session
-    )
+    charity_project = await charity_project_crud.get_by_id(project_id, session)
     if not charity_project:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,

@@ -6,7 +6,9 @@ from app.models.base import BaseCharityDonationModel
 def investing_process(
     target: BaseCharityDonationModel,
     sources: list[BaseCharityDonationModel],
-) -> BaseCharityDonationModel:
+) -> list[BaseCharityDonationModel]:
+
+    modified_sources = []
 
     for source in sources:
         transfer_amount = min(
@@ -16,10 +18,20 @@ def investing_process(
         if transfer_amount == 0:
             break
 
-        for obj in [target, source]:
-            obj.invested_amount += transfer_amount
-            if obj.full_amount == obj.invested_amount:
-                obj.fully_invested = True
-                obj.close_date = datetime.now()
+        target.invested_amount += transfer_amount
+        source.invested_amount += transfer_amount
 
-    return target, sources
+        if target.full_amount == target.invested_amount:
+            target.fully_invested = True
+            target.close_date = datetime.now()
+
+        if source.full_amount == source.invested_amount:
+            source.fully_invested = True
+            source.close_date = datetime.now()
+
+        modified_sources.append(source)
+
+        if target.fully_invested:
+            break
+
+    return modified_sources

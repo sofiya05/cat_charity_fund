@@ -1,8 +1,5 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.api.validators import (
     check_alredy_invested,
     check_charity_project_exists,
@@ -20,6 +17,8 @@ from app.schemas.charity_project import (
     CharityProjectUpdate,
 )
 from app.services.investing import investing_process
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -54,10 +53,9 @@ async def create_new_charity_project(
     new_charity_project = await charity_project_crud.create(
         obj_in, session, commit=False
     )
-    fill_models = await donation_crud.get_not_full_invested_projects(session)
-    target, sources = investing_process(new_charity_project, fill_models)
-    await charity_project_crud.commit(target, session)
-    await donation_crud.commit_list(sources, session)
+    fill_models = await donation_crud.get_not_full_invested(session)
+    sources = investing_process(new_charity_project, fill_models)
+    await charity_project_crud.commit_list(sources, session)
     await session.refresh(new_charity_project)
     return new_charity_project
 
