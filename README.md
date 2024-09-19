@@ -69,8 +69,5 @@ uvicorn main:app --reload
 
 ## Автор
 
-Проект разработала **Бурсянина София**. Почта для связи s.bursyanina@yandex.ru
-
-[Ссылка на документацию](https://github.com/sofiya05/cat_charity_fund?tab=readme-ov-file#qrkot)
-
+Проект разработала **Бурсянина София**. Почта для связи [s.bursyanina@yandex.ru](mailto:s.bursyanina@yandex.ru)
 

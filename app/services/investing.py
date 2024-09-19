@@ -15,11 +15,9 @@ def investing_process(
             target.full_amount - target.invested_amount,
             source.full_amount - source.invested_amount,
         )
-        if transfer_amount == 0:
-            break
 
-        target.invested_amount += transfer_amount
-        source.invested_amount += transfer_amount
+        for obj in [target, source]:
+            obj.invested_amount += transfer_amount
 
         if target.full_amount == target.invested_amount:
             target.fully_invested = True

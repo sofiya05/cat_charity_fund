@@ -1,9 +1,10 @@
 from typing import Optional
 
-from app.models import User
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models import User
 
 
 class CRUDBase:
@@ -56,22 +57,6 @@ class CRUDBase:
         await session.delete(db_obj)
         await session.commit()
         return db_obj
-
-    async def commit(
-        self,
-        obj,
-        session: AsyncSession,
-    ):
-        session.add(obj)
-        await session.commit()
-
-    async def commit_list(
-        self,
-        obj,
-        session: AsyncSession,
-    ):
-        session.add_all(obj)
-        await session.commit()
 
     async def get_by_id(self, project_id: str, session: AsyncSession):
         project = await session.execute(

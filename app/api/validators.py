@@ -1,8 +1,9 @@
 from http import HTTPStatus
 
-from app.crud.charity_project import charity_project_crud
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.crud.charity_project import charity_project_crud
 
 
 async def check_name_dublicate(project_name: str, session: AsyncSession):
