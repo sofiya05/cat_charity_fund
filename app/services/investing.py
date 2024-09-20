@@ -19,7 +19,7 @@ def investing_process(
         for obj in [target, source]:
             obj.invested_amount += transfer_amount
             if obj.full_amount == obj.invested_amount:
-                obj.fully_invested = True 
+                obj.fully_invested = True
                 obj.close_date = datetime.now()
 
         modified_sources.append(source)
