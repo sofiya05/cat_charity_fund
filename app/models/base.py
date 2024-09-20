@@ -20,7 +20,7 @@ class BaseCharityDonationModel(Base):
             name='check_full_amount_and_invested_amount_positive',
         ),
         CheckConstraint(
-            'invested_amount <= full_amount AND invested_amount >= 0',
+            '0 <= invested_amount <= full_amount',
             name='check_invested_amount_less_equal_full_amount',
         ),
     )
